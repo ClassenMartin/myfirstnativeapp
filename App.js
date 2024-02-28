@@ -10,6 +10,9 @@ import { StyleSheet,
 Alert,
 Vibration } from 'react-native';
 import uuid from 'react-native-uuid';
+import { PaperProvider } from 'react-native-paper';
+import { IconButton } from "react-native-paper";
+
 
 
 
@@ -24,28 +27,44 @@ export default function App() {
   
  
 // ADD CHORSE BUTTON
-// I want to clear the input field after a chore is added to the to do list
-// plus I want to fade in the chores as sson as you add a new chore to the to do list
   const handleSubmit = () => {
     if(text) {
       setTexts([...texts, text]); 
-    } 
+    }  
+    setText('')
   };
 
-// DELETE LIST BUTTON
-// deletes the whole list
+// DELETE COMPLETE LIST BUTTON
   const handleClear = () => {
-    setTexts([]);
+    createTwoButtonAlert()
   };
+  const createTwoButtonAlert = () =>
+  Alert.alert('Delete list?', 'Delete the WHOLE list?', [
+    {
+      text: 'Cancel',
+      onPress: () => console.log('Cancel Pressed'),
+      style: 'cancel',
+    },
+    {text: 'OK', onPress: () => setTexts([])},
+  ]);
 
   //RESET CHORES COUNT BUTTON
-  //resets chore list
   const handleSubmit1 = () => {
-    setDone(0)
+    alertDeleteChores()
   };
+  const alertDeleteChores = () =>
+  Alert.alert('Reset chores counter?', 'Reset your completed chores?', [
+    {
+      text: 'Cancel',
+      onPress: () => console.log('Cancel Pressed'),
+      style: 'cancel',
+    },
+    {text: 'OK', onPress: () => setDone(0)},
+  ]);
+
+
 
   //DELETE SINGLE ITEM BUTTON
-// deletes single to do 
   const handleDelete = (idx) => {
     let copy = [...texts];
     copy.splice(idx, 1);
@@ -53,98 +72,70 @@ export default function App() {
     setDone(done +1)
     let donecount = done +1
     console.log(done)
-    if ((donecount%3)===0 && done >= 1) {
-      
+    if ((donecount%5)===0 && done >= 1) {
       Alert.alert(`Get yourself a beer! ${donecount} chores done!`);
     };
   };
 
- 
-
-  
-
-
-  // reset chores reset button
-
-  // useEffect(() = => {setDone}, [])
-
-  // A reset button for the chores
 
 
 
-  return( <SafeAreaView style={styles.container}>
+  return( <PaperProvider>
+  <SafeAreaView style={styles.container}>
     <ScrollView>
               <View>
                 <View style={styles.top}>
                 <Text style={styles.heading}>
                   TO DO LIST</Text>
-                {/* <Text style={styles.text}>{text}</Text> */}
                 <View style={styles.buttonContainer}> 
                   <View style={styles.button}> 
-                    <Button
+                  <IconButton icon="delete-forever" 
+                      size={50} 
+                      iconColor="black"
                       onPress={handleClear}
-                      title="DELETE LIST!"
-                      color="#841584"
-                      accessibilityLabel="Learn more about this purple button"
                     />
                   </View> 
-
                   <View style={styles.button}>
                     <Button
                       onPress={handleSubmit1}
-                      title="RESET CHORES COUNT!"
+                      title="RESET CHORES COUNT"
                       color="#841584"
-                      accessibilityLabel="Learn more about this purple button"
                     />
-
                   </View>
 {/* reset chores button */}
                    <View style={styles.button}>
-                    <Button
-                      onPress={handleSubmit}
-                      title="ADD CHORES!"
-                      color="#841584"
-                      accessibilityLabel="Learn more about this purple button"
-                      
+                   <IconButton icon="note-plus" 
+                    size={50} 
+                      iconColor="black"
+                      onPress={handleSubmit}      
                     />
                   </View>
                 </View>
               </View>
               <View style={styles.middle}>
-                
-              <TextInput placeholder="..." style={styles.input} onChangeText={(text) => setText(text)} />
+              <TextInput placeholder="..." style={styles.input} onChangeText={(text) => setText(text)} value={text} />
               </View>
               </View>
- 
               <View style={styles.todoSection}>
-
               {texts.length > 0 && 
               texts.map((ele, idx) => (
               <View key={uuid.v4()} style={styles.toDoField}>
               <View style={styles.round}><Text style={styles.text}>{idx+1} </Text></View>
               <View style={styles.underline}><Text style={styles.text}>{ele}</Text></View>
-              <View style={styles.done}><Button onPress={() => handleDelete(idx)} title='X' color='black'/></View>
+              <View style={styles.done}><IconButton icon="delete-variant" size={50} iconColor="black" onPress={() => handleDelete(idx)} /></View>
               </View>
               ))}   
-              </View>
-              
- 
+              </View> 
               <View style={styles.end}>
               <View><Text style={styles.textcounter}>You completed <Text style={styles.counterNumber}>{done}</Text> chores today!!!</Text>
               </View>
-
               </View>
-     
               </ScrollView>
              
   </SafeAreaView>
+  </PaperProvider>
   );
 }
-
-
-// orange        #FF8552
-// black         black
-// creamwhite    #FFFFF0
 
 const styles = StyleSheet.create({
   // GENERAL
@@ -200,7 +191,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray', 
     alignSelf:'stretch',
     marginHorizontal:5,
-    borderWidth: 1,
+    // borderWidth: 1,
     textAlign: 'center',  
     },
 
@@ -224,13 +215,7 @@ const styles = StyleSheet.create({
     },
 
     round: {
-      backgroundColor:'black',
-      borderRadius: 30,
-      width:60,
-      height:60,
-      backgroundColor: 'white',
-      borderColor: 'black',
-      borderWidth: 2,
+   
 
     },
 
@@ -242,13 +227,7 @@ const styles = StyleSheet.create({
     },
 
     done: {
-      backgroundColor:'black',
-      borderRadius: 30,
-      width:60,
-      height:60,
-      backgroundColor: 'white',
-      borderColor: 'black',
-      borderWidth: 2,
+ 
       
     },
     // TOP 4/4
