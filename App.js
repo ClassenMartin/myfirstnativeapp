@@ -10,7 +10,9 @@ import { StyleSheet,
 Alert,
 Vibration } from 'react-native';
 import uuid from 'react-native-uuid';
-// key={uuidv4()} 
+
+
+
 
 
 
@@ -19,25 +21,28 @@ export default function App() {
   const [text, setText] = useState('')
   const [texts, setTexts]= useState([])
   const [done, setDone]= useState(0)
+  
+ 
 // ADD CHORSE BUTTON
+// I want to clear the input field after a chore is added to the to do list
+// plus I want to fade in the chores as sson as you add a new chore to the to do list
   const handleSubmit = () => {
     if(text) {
-      setTexts([...texts, text]);
-    }
-    // setTexts('');
-
+      setTexts([...texts, text]); 
+    } 
   };
+
 // DELETE LIST BUTTON
 // deletes the whole list
   const handleClear = () => {
-    setTexts([{}]);
+    setTexts([]);
   };
 
   //RESET CHORES COUNT BUTTON
   //resets chore list
   const handleSubmit1 = () => {
     setDone(0)
-  }
+  };
 
   //DELETE SINGLE ITEM BUTTON
 // deletes single to do 
@@ -46,27 +51,20 @@ export default function App() {
     copy.splice(idx, 1);
     setTexts(copy);
     setDone(done +1)
-   
-    if (done === 4  ){
-      Alert.alert(`Get yourself a beer! 5 chores done!`);
-      Vibration.vibrate(4000);
-    };
-    if (done === 9 ){
-      Alert.alert(`Get yourself a beer! 10 chores done!`);
-    };
-    if (done === 14 ){
-       Alert.alert(`Get yourself a beer! 15 chores done!`);
-    };
-    if (done === 19 ){
-      Alert.alert(`Get yourself a beer! 20 chores done!`);
-      // Vibration.vibrate([100,200,300],true);
+    let donecount = done +1
+    console.log(done)
+    if ((donecount%3)===0 && done >= 1) {
+      
+      Alert.alert(`Get yourself a beer! ${donecount} chores done!`);
     };
   };
 
+ 
+
+  
+
 
   // reset chores reset button
-
-
 
   // useEffect(() = => {setDone}, [])
 
@@ -107,6 +105,7 @@ export default function App() {
                       title="ADD CHORES!"
                       color="#841584"
                       accessibilityLabel="Learn more about this purple button"
+                      
                     />
                   </View>
                 </View>
@@ -116,34 +115,28 @@ export default function App() {
               <TextInput placeholder="..." style={styles.input} onChangeText={(text) => setText(text)} />
               </View>
               </View>
-
+ 
               <View style={styles.todoSection}>
+
               {texts.length > 0 && 
               texts.map((ele, idx) => (
               <View key={uuid.v4()} style={styles.toDoField}>
-
-
-
               <View style={styles.round}><Text style={styles.text}>{idx+1} </Text></View>
               <View style={styles.underline}><Text style={styles.text}>{ele}</Text></View>
-              <View style={styles.done}><Button onPress={() => handleDelete(idx)} title='Done!' color='black'/></View>
+              <View style={styles.done}><Button onPress={() => handleDelete(idx)} title='X' color='black'/></View>
               </View>
-          
-              ))}          
+              ))}   
               </View>
+              
+ 
               <View style={styles.end}>
-              <View><Text style={styles.textcounter}>You completed <Text style={styles.counterNumber}>{done}</Text> chores today!!!</Text></View>
-              {/* <View style={styles.button}>
-                    <Button
-                      onPress={handleSubmit1}
-                      title="RESET CHORES!"
-                      color="#841584"
-                      accessibilityLabel="Learn more about this purple button"
-                    />
-
-                  </View> */}
+              <View><Text style={styles.textcounter}>You completed <Text style={styles.counterNumber}>{done}</Text> chores today!!!</Text>
               </View>
+
+              </View>
+     
               </ScrollView>
+             
   </SafeAreaView>
   );
 }
@@ -221,12 +214,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     
     },
-
-    // toDoField: {
-    // borderColor: 'black',
-    // borderWidth: 2,
-    // alignSelf:'stretch',
-    // },
 
     toDoField: {
       flexDirection:'row',
